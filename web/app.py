@@ -13,6 +13,7 @@ from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
+import plotly.express as px
 
 s = Secret()
 
@@ -133,22 +134,130 @@ index_page = html.Div([
 
 
 def makeUserCharts(name):
+    result = []
     mood_list = person_data[name]
     sorted_mood_list = sorted(mood_list,key=itemgetter(0), reverse=False)
     sorted_mood_list_rev = sorted(mood_list,key=itemgetter(0), reverse=True)
+
     moodHistory = []
     for date, mood in sorted_mood_list:
         moodHistory.append(int(mood))
 
+    last = 7
 
 
-    lastUserUpdate = sorted_mood_list_rev[0]
-    last10UserUpdate = sorted_mood_list_rev[0:10].reverse()
-    averageMood = np.mean(moodHistory)
+    last7UserUpdate = sorted_mood_list_rev[0:last]
+    last7UserUpdate.reverse()
+    lastUserUpdate = last7UserUpdate[-1]
+    print(last7UserUpdate)
+    last7UserUpdate = [int(x[1]) for x in last7UserUpdate]
 
 
 
-    return []
+    averageMoodHistory = np.mean(moodHistory)
+    averageMoodLast7 = np.mean(last7UserUpdate)
+
+#    print(lastUserUpdate)
+#    print(last7UserUpdate)
+#    print(averageMoodHistory)
+#    print(averageMoodLast7)
+    row1 = []
+    row1.append(
+        dbc.Col(
+            dbc.Card([
+                dbc.CardBody(
+                    [
+                        html.Div([
+                            html.H4('Last Recorded Mood', className="card-title"),
+                            daq.Gauge(
+                                id=name+'_gauge',
+                            #    label="Last Recorded Mood",
+                                value=int(lastUserUpdate[1]),
+                                max=10,
+                                min=0,
+                                showCurrentValue=True,
+                                color={"gradient":True,"ranges":{"red":[0,4],"yellow":[4,7],"green":[7,10]}}
+                            ),
+                        ],className="container text-center")
+
+                    ]
+                ),
+            ],
+            style={"width": "22rem"},
+            ),width=4
+        )
+    )
+
+    row1.append(
+        dbc.Col(
+            dbc.Card([
+                dbc.CardBody(
+                    [
+                        html.Div([
+                            html.H4('Average Mood Last 7 Days', className="card-title"),
+                            daq.Gauge(
+                                id=name+'_gauge',
+                            #    label="Average Mood Last 7 Days",
+                                value=averageMoodLast7,
+                                max=10,
+                                min=0,
+                                showCurrentValue=True,
+                                color={"gradient":True,"ranges":{"red":[0,4],"yellow":[4,7],"green":[7,10]}}
+                            ),
+                        ],className="container text-center")
+
+                    ]
+                ),
+            ],
+            style={"width": "22rem"},
+            ),width=4
+        )
+    )
+
+    row1.append(
+        dbc.Col(
+            dbc.Card([
+                dbc.CardBody(
+                    [
+                        html.Div([
+                            html.H4('Average Mood All Time', className="card-title"),
+                            daq.Gauge(
+                                id=name+'_gauge',
+                            #    label="Average Mood Last 7 Days",
+                                value=averageMoodHistory,
+                                max=10,
+                                min=0,
+                                showCurrentValue=True,
+                                color={"gradient":True,"ranges":{"red":[0,4],"yellow":[4,7],"green":[7,10]}}
+                            ),
+                        ],className="container text-center")
+
+                    ]
+                ),
+            ],
+            style={"width": "22rem"},
+            ),width=4
+        )
+    )
+
+    result.append(dbc.Row(row1, style={"height": "auto", "padding":"10px"},))
+
+    fig = px.line(x=range(7,0,-1),
+                  y=last7UserUpdate,
+                  labels={'x':'Days Ago', 'y':'Day Value 0-10'},
+                  )
+    fig.update_layout(title='Moods recorded in past week',
+                   xaxis_title='Days Ago',
+                   yaxis_title='Mood Recording',
+                   xaxis=dict(showticklabels=True,),
+                   )
+    fig.update_xaxes(autorange="reversed")
+    result.append(dcc.Graph(figure=fig, id='graph'))
+
+
+
+
+    return result
 
 
 
