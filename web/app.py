@@ -2,6 +2,8 @@ import boto3
 import numpy as np
 from operator import itemgetter
 
+from secrets import Secret
+
 import requests
 import pandas as pd
 from flask import Flask
@@ -12,12 +14,13 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 
+s = Secret()
 
 client = boto3.resource('dynamodb',
-                        aws_access_key_id='AKIA2CFFCDZLPX747O6A',
-                        aws_secret_access_key='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',
+                        aws_access_key_id=s.aws_access_key_id,
+                        aws_secret_access_key=s.aws_secret_access_key,
                         region_name='us-east-1')
-                        
+
 table = client.Table('hahm-mood-dev')
 items = table.scan()['Items']
 person_data = {}
