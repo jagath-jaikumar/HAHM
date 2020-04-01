@@ -133,6 +133,21 @@ index_page = html.Div([
 
 
 def makeUserCharts(name):
+    mood_list = person_data[name]
+    sorted_mood_list = sorted(mood_list,key=itemgetter(0), reverse=False)
+    sorted_mood_list_rev = sorted(mood_list,key=itemgetter(0), reverse=True)
+    moodHistory = []
+    for date, mood in sorted_mood_list:
+        moodHistory.append(int(mood))
+
+
+
+    lastUserUpdate = sorted_mood_list_rev[0]
+    last10UserUpdate = sorted_mood_list_rev[0:10].reverse()
+    averageMood = np.mean(moodHistory)
+
+
+
     return []
 
 
