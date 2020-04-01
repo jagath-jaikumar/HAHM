@@ -50,17 +50,20 @@ def make_card(name,avg):
     return dbc.Card([
         dbc.CardBody(
             [
-                html.H4(name, className="card-title"),
-                daq.Gauge(
-                    id=name+'_gauge',
-                    label="Mood in past week",
-                    value=avg,
-                    max=10,
-                    min=0,
-                    showCurrentValue=True,
-                    color={"gradient":True,"ranges":{"red":[0,4],"yellow":[4,7],"green":[7,10]}}
-                ),
-                dbc.Button("Details", color="primary"),
+                html.Div([
+                    html.H4(name, className="card-title"),
+                    daq.Gauge(
+                        id=name+'_gauge',
+                        label="Mood in past week",
+                        value=avg,
+                        max=10,
+                        min=0,
+                        showCurrentValue=True,
+                        color={"gradient":True,"ranges":{"red":[0,4],"yellow":[4,7],"green":[7,10]}}
+                    ),
+                    dbc.Button("Details", color="primary"),
+                ],className="container text-center")
+
             ]
         ),
     ],
@@ -87,7 +90,7 @@ def make_card_layout():
             count +=1
 
         if len(row) > 0:
-            res.append(dbc.Row(row, style={"height": "45vh"},))
+            res.append(dbc.Row(row, style={"height": "40vh"},))
 
     return res
 
