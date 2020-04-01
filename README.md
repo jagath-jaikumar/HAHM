@@ -1,17 +1,11 @@
 # 692M Project Proposal
-### HAHM: Home Assistant Health Monitor
-### Jagath Jai Kumar
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
-
 [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Naereen/)
-
 [![ForTheBadge makes-people-smile](http://ForTheBadge.com/images/badges/makes-people-smile.svg)](http://ForTheBadge.com)
 
-[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
-
-
-
+### HAHM: Home Assistant Health Monitor
+### Jagath Jai Kumar
 
 # Problem
 
