@@ -47,6 +47,7 @@ for person,mood_list in person_data.items():
 ##################################################################################################
 
 def make_card(name,avg):
+    link = '/'+name
     return dbc.Card([
         dbc.CardBody(
             [
@@ -61,7 +62,7 @@ def make_card(name,avg):
                         showCurrentValue=True,
                         color={"gradient":True,"ranges":{"red":[0,4],"yellow":[4,7],"green":[7,10]}}
                     ),
-                    dbc.Button("Details", color="primary"),
+                    dbc.Button("Details",href=link, color="primary"),
                 ],className="container text-center")
 
             ]
@@ -84,13 +85,13 @@ def make_card_layout():
         row = []
         for j in range(3):
             try:
-                row.append(dbc.Col(html.Div(make_card(names[count], avgs[count])), md=4 ))
+                row.append(dbc.Col(html.Div(make_card(names[count], avgs[count])),style={"width": "auto", "padding":"10px"}, md=4,width=3 ))
             except:
                 pass
             count +=1
 
         if len(row) > 0:
-            res.append(dbc.Row(row, style={"height": "40vh"},))
+            res.append(dbc.Row(row, style={"height": "auto", "padding":"10px"},))
 
     return res
 
@@ -124,25 +125,64 @@ index_page = html.Div([
         ],className='jumbotron')
 
 
-
-
-
     ,
     html.Div(divs, className='container')
 ])
 
-test_page = html.Div([
-    html.H1('test')
-])
+
+
+
+def makeUserCharts(name):
+    return []
+
+
+
+
+def indivUserPage(pathname):
+    name = pathname[1:].split('%20')
+    name = ' '.join(name)
+    if name not in person_data:
+        return html.Div([
+            html.Div([
+                html.H2('Error:  Name not found', className='display-4'),
+                ],
+            className='container text-center'
+            )
+            ],className='jumbotron')
+
+    charts = makeUserCharts(name)
+
+
+    layout = html.Div([
+    html.Div([
+        html.Div([
+            html.H2(name, className='display-4'),
+            html.P('Here is where a medical professional would  get a detailed view on this patient', className='lead'),
+            html.Hr(className="my-4"),
+            html.P('The following data is updated in real time'),
+            html.A('Back to overview',className='btn btn-primary btn-lg', href="/",role="button")
+        ],
+        className='container text-center'
+        )
+        ],className='jumbotron'),
+
+        html.Div(charts, className='container')
+    ])
+
+    return layout
+
+
+
+
 
 # Update the index
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
-    if pathname == '/test':
-        return test_page
-    else:
+    if pathname == '/' or pathname == '':
         return index_page
+
+    return indivUserPage(pathname)
 
 
 if __name__ == '__main__':
