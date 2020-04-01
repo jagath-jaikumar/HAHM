@@ -46,6 +46,50 @@ for person,mood_list in person_data.items():
     avg_last_7[person] = avg
 ##################################################################################################
 
+def make_card(name,avg):
+    return dbc.Card([
+        dbc.CardBody(
+            [
+                html.H4(name, className="card-title"),
+                daq.Gauge(
+                    id=name+'_gauge',
+                    label="Mood in past week",
+                    value=avg,
+                    max=10,
+                    min=0,
+                    showCurrentValue=True,
+                    color={"gradient":True,"ranges":{"red":[0,4],"yellow":[4,7],"green":[7,10]}}
+                ),
+                dbc.Button("Details", color="primary"),
+            ]
+        ),
+    ],
+    style={"width": "18rem"},
+)
+
+
+
+
+def make_card_layout():
+    res = []
+    names = list(avg_last_7.keys())
+    avgs = list(avg_last_7.values())
+
+    count = 0
+
+    for i in range(len(names)):
+        row = []
+        for j in range(3):
+            try:
+                row.append(dbc.Col(html.Div(make_card(names[count], avgs[count])), md=4 ))
+            except:
+                pass
+            count +=1
+
+        if len(row) > 0:
+            res.append(dbc.Row(row, style={"height": "45vh"},))
+
+    return res
 
 app = dash.Dash(__name__,
                 external_stylesheets=[dbc.themes.PULSE],
@@ -60,14 +104,27 @@ app.layout = html.Div([
 
 
 
-divs = []
-
-
-
+divs = make_card_layout()
 
 
 index_page = html.Div([
-    html.H1('index'),
+    html.Div([
+        html.Div([
+            html.H2('Therapist Dashboard Portal', className='display-4'),
+            html.P('Here is where a medical professional would  get an overview of his/her patients', className='lead'),
+            html.Hr(className="my-4"),
+            html.P('The professional can click on a patient for more details and to contact directly'),
+            html.A('Github', target="_blank",className='btn btn-primary btn-lg', href="https://github.com/jagath-jaikumar/HAHM",role="button")
+        ],
+        className='container text-center'
+        )
+        ],className='jumbotron')
+
+
+
+
+
+    ,
     html.Div(divs, className='container')
 ])
 
